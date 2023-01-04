@@ -5,8 +5,10 @@ import LoginScreen from "./screens/LoginScreen.jsx";
 export default function App() {
   return (
     <>
-      {/* <RegistrationScreen /> */}
-      <LoginScreen />
+      <RegistrationScreen />
+      {/* <LoginScreen />  
+      TODO: add router
+      */}
     </>
   );
 }
