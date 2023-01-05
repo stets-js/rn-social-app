@@ -15,6 +15,9 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+
+import ImagePickerAvatar from "../components/Avatar"
+
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
@@ -26,12 +29,17 @@ const initialState = {
 export default function RegistrationScreen() {
   const [state, setstate] = useState(initialState);
   
+  
 
   const keyboardHide = () => {
+     Keyboard.dismiss();
+  };
+
+  const submitForm = () => {
     Keyboard.dismiss();
     setstate(initialState);
     console.log(state);
-  };
+  }
 
   const [fontsLoaded] = useFonts({
     "Robo-Regular": require("../assets/fonts/roboto/Roboto-Regular.ttf"),
@@ -42,6 +50,7 @@ export default function RegistrationScreen() {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
+    
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
@@ -49,10 +58,11 @@ export default function RegistrationScreen() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <ImageBackground style={styles.image} source={require("../assets/bg.jpg")}>
+    <ImageBackground style={styles.bg} source={require("../assets/bg.jpg")}>
+        <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <View style={styles.regBox}>
+            <ImagePickerAvatar/>
             <View onLayout={onLayoutRootView}>
               <Text style={styles.formTitle}>REGISTRATION</Text>
             </View>
@@ -92,7 +102,7 @@ export default function RegistrationScreen() {
                   }
                 />
               </View>
-              <TouchableOpacity style={styles.button} onPress={keyboardHide}>
+              <TouchableOpacity style={styles.button} onPress={submitForm}>
                 <Text style={styles.buttonTitle}>Sign in</Text>
               </TouchableOpacity>
               <View>
@@ -103,8 +113,8 @@ export default function RegistrationScreen() {
             </View>
           </View>
         </View>
-      </ImageBackground>
     </TouchableWithoutFeedback>
+      </ImageBackground>
   );
 }
 
@@ -113,11 +123,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
   },
-  image: {
+  bg: {
     flex: 1,
     resizeMode: "cover",
   },
   regBox: {
+    position:"relative",
     flex: 0.7,
     justifyContent: "flex-end",
     backgroundColor: "#FFFFFF",

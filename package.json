@@ -1,5 +1,5 @@
 {
-  "name": "expoedu",
+  "name": "rn-social",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -12,13 +12,15 @@
     "@expo/dev-server": "^0.1.124",
     "@expo/webpack-config": "^0.17.2",
     "expo": "^47.0.0",
+    "expo-font": "~11.0.1",
+    "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
+    "react-native-image-picker": "^4.10.3",
     "react-native-web": "~0.18.7",
-    "expo-font": "~11.0.1",
-    "expo-splash-screen": "~0.17.5"
+    "expo-image-picker": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3"
