@@ -41,15 +41,11 @@ export default function ImagePickerAvatar() {
           style={styles.avatarImage}
         source={image ? { uri: image } : images.avatar}
         />
-              {!image ? <TouchableOpacity style={styles.addAvatarButton}
-               onPress={pickImage}
+        <TouchableOpacity style={styles.addAvatarButton}
+          onPress={!image ? pickImage : deleteAvatar}
               >
-                 <Image style={styles.addButtonIcon} source={images.addButton}/>
-        </TouchableOpacity>: <TouchableOpacity style={styles.addAvatarButton}
-               onPress={deleteAvatar}
-              >
-                 <Image style={styles.addButtonIcon} source={images.resetButton}/>
-        </TouchableOpacity>}
+                 <Image source={!image ? images.addButton : images.resetButton}/>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -69,16 +65,14 @@ const styles = StyleSheet.create({
     addAvatarButton: {
         position: "absolute",
         bottom: 14,
-        right: -12.5,
+       right: -12.5,
        width: 25,
         height: 25, 
-    
-      
     },
     avatarImage: {
         width: 120,
-        height: 120,
-        resizeMode: 'contain',
-
-    }
+      height: 120,
+        borderRadius:16,
+  },
+ 
 });
