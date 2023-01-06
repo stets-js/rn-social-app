@@ -170,13 +170,15 @@ const styles = StyleSheet.create({
     color: "#1B4371",
   },
   viewPassword: {
+    height: "100%",
     position: "absolute",
     right: 16,
-  top: 15,
   },
   viewPasswordTitle: {
     color: "#1B4371",
     fontFamily: "Robo-Regular",
     fontSize: 16,
+    marginTop: "auto",
+    marginBottom: "auto",
   },
 });
