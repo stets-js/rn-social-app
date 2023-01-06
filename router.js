@@ -8,6 +8,7 @@ import PostsScreen from "./screens/PostsScreen.jsx";
 import CreatePostsScreen from "./screens/CreatePostsScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import LogoutBtn from "./components/LogOutBtn.jsx";
+import PostIcon from "./components/PostIcon.jsx";
 
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,6 +39,7 @@ export default function useRoute(isAuth) {
           headerRight: () => <LogoutBtn />,
           title: "Posts",
           headerTitleAlign: "center",
+          tabBarIcon: ({ size, focused, color }) => <PostIcon />,
         }}
       />
       <Tab.Screen name="Create" component={CreatePostsScreen} />
