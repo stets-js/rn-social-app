@@ -38,6 +38,7 @@ export default function RegistrationScreen({ navigation }) {
     Keyboard.dismiss();
     setstate(initialState);
     console.log(state);
+    navigation.navigate("Posts")
   };
 
   const [fontsLoaded] = useFonts({
