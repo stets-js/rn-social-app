@@ -10,13 +10,13 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+ 
 } from "react-native";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-
-import ImagePickerAvatar from "../components/Avatar"
+import ImagePickerAvatar from "../components/Avatar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,20 +26,19 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen({navigation}) {
+export default function RegistrationScreen({ navigation }) {
   const [state, setstate] = useState(initialState);
-  
-  
+  const [isHidden, setisHidden] = useState(true);
 
   const keyboardHide = () => {
-     Keyboard.dismiss();
+    Keyboard.dismiss();
   };
 
   const submitForm = () => {
     Keyboard.dismiss();
     setstate(initialState);
     console.log(state);
-  }
+  };
 
   const [fontsLoaded] = useFonts({
     "Robo-Regular": require("../assets/fonts/roboto/Roboto-Regular.ttf"),
@@ -50,7 +49,6 @@ export default function RegistrationScreen({navigation}) {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
-    
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
@@ -59,10 +57,10 @@ export default function RegistrationScreen({navigation}) {
 
   return (
     <ImageBackground style={styles.bg} source={require("../assets/bg.jpg")}>
-        <TouchableWithoutFeedback onPress={keyboardHide}>
+      <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <View style={styles.regBox}>
-            <ImagePickerAvatar/>
+            <ImagePickerAvatar />
             <View onLayout={onLayoutRootView}>
               <Text style={styles.formTitle}>REGISTRATION</Text>
             </View>
@@ -72,8 +70,8 @@ export default function RegistrationScreen({navigation}) {
                 <TextInput
                   style={styles.input}
                   placeholder="Login"
-                                  placeholderTextColor="#BDBDBD"
-                                   value={state.login}
+                  placeholderTextColor="#BDBDBD"
+                  value={state.login}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, login: value }))
                   }
@@ -83,8 +81,8 @@ export default function RegistrationScreen({navigation}) {
                 <TextInput
                   style={styles.input}
                   placeholder="Email"
-                                  placeholderTextColor="#BDBDBD"
-                                   value={state.email}
+                  placeholderTextColor="#BDBDBD"
+                  value={state.email}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, email: value }))
                   }
@@ -95,17 +93,26 @@ export default function RegistrationScreen({navigation}) {
                   style={styles.input}
                   placeholder="Password"
                   placeholderTextColor="#BDBDBD"
-                                  secureTextEntry={true}
-                                   value={state.password}
+                  secureTextEntry={isHidden}
+                  value={state.password}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, password: value }))
                   }
                 />
+                <TouchableOpacity style={styles.viewPassword}
+                  onPress={() => { setisHidden(!isHidden) }}
+                >
+                  {isHidden ? <Text style={styles.viewPasswordTitle}>Show</Text> : <Text style={styles.viewPasswordTitle}>Hide</Text>}
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.button} onPress={submitForm}>
-                <Text style={styles.buttonTitle}>Sign in</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}>
+                  <TouchableOpacity style={styles.button} onPress={submitForm}>
+                    <Text style={styles.buttonTitle}>Sign in</Text>
+                  </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Login");
+                }}
+              >
                 <Text style={styles.footerLoginLink}>
                   Already have an account? Log in
                 </Text>
@@ -113,8 +120,8 @@ export default function RegistrationScreen({navigation}) {
             </View>
           </View>
         </View>
-    </TouchableWithoutFeedback>
-      </ImageBackground>
+      </TouchableWithoutFeedback>
+    </ImageBackground>
   );
 }
 
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   regBox: {
-    position:"relative",
+    position: "relative",
     flex: 0.7,
     justifyContent: "flex-end",
     backgroundColor: "#FFFFFF",
@@ -177,5 +184,15 @@ const styles = StyleSheet.create({
   footerLoginLink: {
     textAlign: "center",
     color: "#1B4371",
+  },
+  viewPassword: {
+    position: "absolute",
+    right: 16,
+  top: 15,
+  },
+  viewPasswordTitle: {
+    color: "#1B4371",
+    fontFamily: "Robo-Regular",
+    fontSize: 16,
   },
 });
