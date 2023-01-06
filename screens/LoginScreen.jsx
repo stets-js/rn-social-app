@@ -18,12 +18,13 @@ import * as SplashScreen from "expo-splash-screen";
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
-  login: "",
   email: "",
+  password: "",
 };
 
 export default function LoginScreen({navigation}) {
   const [state, setstate] = useState(initialState);
+  const [isHidden, setisHidden] = useState(true);
   
 
   const submitForm = () => {
@@ -52,8 +53,8 @@ export default function LoginScreen({navigation}) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <ImageBackground style={styles.image} source={require("../assets/bg.jpg")}>
+    <ImageBackground style={styles.image} source={require("../assets/bg.jpg")}>
+        <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <View style={styles.logBox}>
             <View onLayout={onLayoutRootView}>
@@ -64,17 +65,6 @@ export default function LoginScreen({navigation}) {
               <View style={{ marginBottom: 16 }}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Login"
-                                  placeholderTextColor="#BDBDBD"
-                                   value={state.login}
-                  onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, login: value }))
-                  }
-                />
-              </View>
-              <View style={{ marginBottom: 43 }}>
-                <TextInput
-                  style={styles.input}
                   placeholder="Email"
                                   placeholderTextColor="#BDBDBD"
                                    value={state.email}
@@ -83,6 +73,24 @@ export default function LoginScreen({navigation}) {
                   }
                 />
               </View>
+              <View style={{ marginBottom: 43 }}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  placeholderTextColor="#BDBDBD"
+                  secureTextEntry={isHidden}
+                  value={state.password}
+                  onChangeText={(value) =>
+                    setstate((prevState) => ({ ...prevState, password: value }))
+                  }
+                />
+                <TouchableOpacity style={styles.viewPassword}
+                  onPress={() => { setisHidden(!isHidden) }}
+                >
+                  {isHidden ? <Text style={styles.viewPasswordTitle}>Show</Text> : <Text style={styles.viewPasswordTitle}>Hide</Text>}
+                </TouchableOpacity>
+              </View>
+              
               
               <TouchableOpacity style={styles.button} onPress={submitForm}>
                 <Text style={styles.buttonTitle}>Log in</Text>
@@ -95,8 +103,8 @@ export default function LoginScreen({navigation}) {
             </View>
           </View>
         </View>
-      </ImageBackground>
     </TouchableWithoutFeedback>
+      </ImageBackground>
   );
 }
 
@@ -159,5 +167,15 @@ const styles = StyleSheet.create({
   footerLoginLink: {
     textAlign: "center",
     color: "#1B4371",
+  },
+  viewPassword: {
+    position: "absolute",
+    right: 16,
+  top: 15,
+  },
+  viewPasswordTitle: {
+    color: "#1B4371",
+    fontFamily: "Robo-Regular",
+    fontSize: 16,
   },
 });
