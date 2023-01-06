@@ -26,7 +26,7 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({navigation}) {
   const [state, setstate] = useState(initialState);
   
   
@@ -105,11 +105,11 @@ export default function RegistrationScreen() {
               <TouchableOpacity style={styles.button} onPress={submitForm}>
                 <Text style={styles.buttonTitle}>Sign in</Text>
               </TouchableOpacity>
-              <View>
+              <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}>
                 <Text style={styles.footerLoginLink}>
                   Already have an account? Log in
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

@@ -22,7 +22,7 @@ const initialState = {
   email: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}) {
   const [state, setstate] = useState(initialState);
   
 
@@ -87,11 +87,11 @@ export default function LoginScreen() {
               <TouchableOpacity style={styles.button} onPress={submitForm}>
                 <Text style={styles.buttonTitle}>Log in</Text>
               </TouchableOpacity>
-              <View>
+              <TouchableOpacity onPress={()=>{navigation.navigate("Registration")}}>
                 <Text style={styles.footerLoginLink}>
                   Don't have an account? Sign in
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
