@@ -71,6 +71,7 @@ export default function RegistrationScreen({ navigation }) {
                   style={styles.input}
                   placeholder="Login"
                   placeholderTextColor="#BDBDBD"
+                  keyboardType="visible-password"
                   value={state.login}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, login: value }))
@@ -82,6 +83,7 @@ export default function RegistrationScreen({ navigation }) {
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#BDBDBD"
+                  keyboardType="visible-password"
                   value={state.email}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, email: value }))

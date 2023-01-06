@@ -66,8 +66,9 @@ export default function LoginScreen({navigation}) {
                 <TextInput
                   style={styles.input}
                   placeholder="Email"
-                                  placeholderTextColor="#BDBDBD"
-                                   value={state.email}
+                  placeholderTextColor="#BDBDBD"
+                  keyboardType="visible-password"
+                  value={state.email}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, email: value }))
                   }
