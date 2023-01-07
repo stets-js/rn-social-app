@@ -31,7 +31,7 @@ export default function LoginScreen({navigation}) {
     Keyboard.dismiss();
     setstate(initialState);
     console.log(state);
-    navigation.navigate("Posts")
+    navigation.navigate("Home")
     };
     
     const keyboardHide = () => {

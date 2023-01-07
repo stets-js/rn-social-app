@@ -9,6 +9,8 @@ import CreatePostsScreen from "./screens/CreatePostsScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import LogoutBtn from "./components/LogOutBtn.jsx";
 import PostIcon from "./components/PostIcon.jsx";
+import NewPostIcon from "./components/NewPostIcon.jsx";
+import UserIcon from "./components/UserIcon.jsx";
 
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,19 +33,45 @@ export default function useRoute(isAuth) {
     );
   }
   return (
-    <Tab.Navigator initialRouteName="Posts">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{ tabBarShowLabel: false }}
+    >
       <Tab.Screen
-        name="Posts"
+        name="Home"
         component={PostsScreen}
         options={{
           headerRight: () => <LogoutBtn />,
           title: "Posts",
           headerTitleAlign: "center",
-          tabBarIcon: ({ size, focused, color }) => <PostIcon />,
+          tabBarIcon: ({ color, number, focused }) => {
+            return <PostIcon />;
+          },
+          tabBarLabel: "none",
         }}
       />
-      <Tab.Screen name="Create" component={CreatePostsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        name="Create"
+        component={CreatePostsScreen}
+        options={{
+          title: "Create post",
+          headerTitleAlign: "center",
+          tabBarIcon: ({ color, number, focused }) => {
+            return <NewPostIcon />;
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          title: "Profile",
+          headerTitleAlign: "center",
+          tabBarIcon: ({ color, number, focused }) => {
+            return <UserIcon />;
+          },
+        }}
+      />
     </Tab.Navigator>
   );
 }
