@@ -7,7 +7,6 @@ import LoginScreen from "./screens/LoginScreen.jsx";
 import PostsScreen from "./screens/PostsScreen.jsx";
 import CreatePostsScreen from "./screens/CreatePostsScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
-import LogoutBtn from "./components/LogOutBtn.jsx";
 import PostIcon from "./components/PostIcon.jsx";
 import NewPostIcon from "./components/NewPostIcon.jsx";
 import UserIcon from "./components/UserIcon.jsx";
@@ -41,13 +40,10 @@ export default function useRoute(isAuth) {
         name="Home"
         component={PostsScreen}
         options={{
-          headerRight: () => <LogoutBtn />,
-          title: "Posts",
-          headerTitleAlign: "center",
+          headerShown: false,
           tabBarIcon: ({ color, number, focused }) => {
             return <PostIcon />;
           },
-          tabBarLabel: "none",
         }}
       />
       <Tab.Screen

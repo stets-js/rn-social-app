@@ -1,27 +1,53 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Button,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Camera } from "expo-camera";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Location from "expo-location";
 
-export default function CreatePostsScreen({ navigation }){
+const images = {
+  defaultIcon: require("../assets/images/noPhotoIco.png"),
+  editPhotoIcon: require("../assets/images/editPhotoIco.png"),
+};
+
+export default function CreateScreen({ navigation }) {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
-
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+console.log("before--photo-->>>", photo)
   const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync();
-    setPhoto(photo.uri);
-    
-    console.log("latitude", location.coords.latitude);
-    console.log("longitude", location.coords.longitude);
-    console.log("photo", photo);
+    const data = await camera.takePictureAsync();
+    setPhoto(data.uri.toString());
   };
 
   const sendPhoto = () => {
-    console.log("navigation", navigation);
-    navigation.navigate("Posts", { photo });
+    navigation.navigate("DefaultScreen", { photo });
+    setPhoto(null);
   };
+
+  if (!permission) {
+    // Camera permissions are still loading
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -30,14 +56,25 @@ export default function CreatePostsScreen({ navigation }){
           <View style={styles.takePhotoContainer}>
             <Image
               source={{ uri: photo }}
-              style={{ height: 200, width: 200, borderRadius: 10 }}
+              style={{ height: "100%", width: "100%", borderRadius: 8 }}
             />
           </View>
         )}
-        <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
-          <Text style={styles.snap}>SNAP</Text>
-        </TouchableOpacity>
+        <TouchableWithoutFeedback
+          onPress={takePhoto}
+          style={styles.snapContainer}
+          disabled={!photo? false: true}
+        >
+          <Image source={!photo ? images.defaultIcon : images.editPhotoIcon} />
+        </TouchableWithoutFeedback>
       </Camera>
+      <TouchableWithoutFeedback onPress={() => {
+        setPhoto(null)
+        console.log(photo)
+      }}
+      disabled={photo? false: true}>
+        <Text>Edit photo</Text>
+      </TouchableWithoutFeedback>
       <View>
         <TouchableOpacity onPress={sendPhoto} style={styles.sendBtn}>
           <Text style={styles.sendLabel}>SEND</Text>
@@ -45,40 +82,35 @@ export default function CreatePostsScreen({ navigation }){
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
   camera: {
-    height: "70%",
-    marginHorizontal: 2,
-    marginTop: 40,
-    borderRadius: 10,
+    height: 240,
+    marginHorizontal: 16,
+    marginTop: 32,
+    borderRadius: 8,
     alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  snap: {
-    color: "#fff",
+    justifyContent: "center",
   },
   snapContainer: {
-    borderWidth: 1,
-    borderColor: "#ff0000",
-    width: 70,
-    height: 70,
-    borderRadius: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
   },
   takePhotoContainer: {
     position: "absolute",
-    top: 50,
-    left: 10,
-    borderColor: "#fff",
-    borderWidth: 1,
-    borderRadius: 10,
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
   },
   sendBtn: {
     marginHorizontal: 30,
