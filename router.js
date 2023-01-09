@@ -10,6 +10,7 @@ import ProfileScreen from "./screens/ProfileScreen.jsx";
 import PostIcon from "./components/PostIcon.jsx";
 import NewPostIcon from "./components/NewPostIcon.jsx";
 import UserIcon from "./components/UserIcon.jsx";
+import BackBtn from "./components/BackBtn.jsx";
 
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,11 +51,14 @@ export default function useRoute(isAuth) {
         name="Create"
         component={CreatePostsScreen}
         options={{
+          tabBarHideOnKeyboard: true,
           title: "Create post",
           headerTitleAlign: "center",
           tabBarIcon: ({ color, number, focused }) => {
             return <NewPostIcon />;
           },
+          tabBarStyle: { display: "none" },
+          headerLeft: () => <BackBtn />,
         }}
       />
       <Tab.Screen
