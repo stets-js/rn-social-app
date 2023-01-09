@@ -166,6 +166,7 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop:32,
     backgroundColor: "#FFF",
     paddingHorizontal: 16,
   },
@@ -176,7 +177,6 @@ const styles = StyleSheet.create({
   },
   camera: {
     height: 240,
-    marginTop: 32,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 8,
@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
   takePhotoContainer: {
     height: 200,
     borderRadius: 8,
-    marginTop: 32,
     height: 240,
     marginBottom:8,
     

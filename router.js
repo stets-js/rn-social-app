@@ -57,8 +57,8 @@ export default function useRoute(isAuth) {
           tabBarIcon: ({ color, number, focused }) => {
             return <NewPostIcon />;
           },
-          tabBarStyle: { display: "none" },
-          headerLeft: () => <BackBtn />,
+          // tabBarStyle: { display: "none" },
+          // headerLeft: () => <BackBtn />,
         }}
       />
       <Tab.Screen
