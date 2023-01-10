@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Image, Button } from "react-native";
+import { View, StyleSheet, FlatList, Image, Text,TouchableOpacity } from "react-native";
+
+const images = {
+  map: require("../../assets/images/map.png"),
+  comment: require("../../assets/images/comment.png"),
+};
 
 export default function DefaultScreenPosts({ route, navigation }) {
   const [posts, setPosts] = useState([]);
-  console.log("route.params---->>>>", route.params);
 
   useEffect(() => {
     if (route.params) {
@@ -25,16 +29,26 @@ export default function DefaultScreenPosts({ route, navigation }) {
             }}
           >
             <Image
-              source={{ uri: item.photo }}
+              source={{uri: item.photo }}
               style={{ width: 350, height: 200 }}
             />
+            <Text>Title</Text>
+                <View>
+                    <TouchableOpacity  style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Comments")}>
+                      <Image
+                      source={images.comment}
+                      style={{ width: 25, height: 25 }}
+                    />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Map", {item: item})}>
+                      <Image
+                      source={images.map}
+                      style={{ width: 25, height: 25 }}
+                    />
+                    </TouchableOpacity>
+                </View>
           </View>
         )}
-      />
-      <Button title="go to map" onPress={() => navigation.navigate("Map")} />
-      <Button
-        title="go to Comments"
-        onPress={() => navigation.navigate("Comments")}
       />
     </View>
   );
