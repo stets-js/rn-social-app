@@ -4,9 +4,11 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
+  signOut,
 } from "firebase/auth";
 import appFirebase from "../../firebase/firebaseConfig";
 import { authSlice } from "./authReducer";
+const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
 export const signUpUser =
   ({ email, password, login }) =>
@@ -28,7 +30,7 @@ export const signUpUser =
         userId: uid,
       };
 
-      dispatch(authSlice.actions.updateUserProfile(userUpdateProfile));
+      dispatch(updateUserProfile(userUpdateProfile));
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -41,7 +43,7 @@ export const signInUser =
     try {
       const auth = getAuth(appFirebase);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      dispatch(authSlice.actions.updateUserProfile({ userId: user.uid }));
+      dispatch(updateUserProfile({ userId: user.uid }));
       console.log("user", user);
     } catch (error) {
       const errorCode = error.code;
@@ -49,19 +51,22 @@ export const signInUser =
     }
   };
 
-export const signOutUser = () => async (dispatch, getState) => {};
-
-export const currentUser = () => async (dispatch, getState) => {
+export const signOutUser = () => async (dispatch, getState) => {
   const auth = getAuth(appFirebase);
-  onAuthStateChanged(auth, (user) => {
+  signOut(auth);
+  dispatch(authSignOut());
+};
+
+export const authStateCahngeUser = () => async (dispatch, getState) => {
+  const auth = getAuth(appFirebase);
+  await onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      // const uid = user.uid;
-      const currentUser = user;
-      return currentUser;
-    } else {
-      return;
+      const userUpdateProfile = {
+        login: user.displayName,
+        userId: user.uid,
+      };
+      dispatch(authStateChange({ stateChange: true }));
+      dispatch(updateUserProfile(userUpdateProfile));
     }
   });
 };

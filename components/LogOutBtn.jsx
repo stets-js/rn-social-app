@@ -2,9 +2,11 @@ import React from "react";
 import {
   StyleSheet,
   Image,
-  TouchableOpacity,
-  
+  TouchableOpacity, 
 } from "react-native";
+
+import { useDispatch } from "react-redux";
+import { signOutUser } from "../redux/auth/authOperations";
 
 const images = {
     logout: require("../assets/images/log-out.png"),
@@ -12,8 +14,13 @@ const images = {
 
 
 export default function LogoutBtn() {
+     const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(signOutUser());
+  };
     return (
-        <TouchableOpacity style={styles.logout}>
+        <TouchableOpacity style={styles.logout}  onPress={signOut}>
                  <Image source={images.logout}/>
         </TouchableOpacity>
     )
