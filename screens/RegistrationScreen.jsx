@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
  
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { signUpUser } from "../redux/auth/authOperations";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -30,15 +32,17 @@ export default function RegistrationScreen({ navigation }) {
   const [state, setstate] = useState(initialState);
   const [isHidden, setisHidden] = useState(true);
 
+  const dispatch = useDispatch();
+
   const keyboardHide = () => {
     Keyboard.dismiss();
   };
 
   const submitForm = () => {
-    Keyboard.dismiss();
+     dispatch(signUpUser(state));
     setstate(initialState);
     console.log(state);
-    navigation.navigate("Home")
+   // navigation.navigate("Home")
   };
 
   const [fontsLoaded] = useFonts({

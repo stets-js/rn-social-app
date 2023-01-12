@@ -12,66 +12,39 @@ import NewPostIcon from "./components/NewPostIcon.jsx";
 import UserIcon from "./components/UserIcon.jsx";
 import BackBtn from "./components/BackBtn.jsx";
 
-const AuthStack = createStackNavigator();
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+import CommentsScreen from "./screens/nestedScreens/CommentsScreen";
+import MapScreen from "./screens/nestedScreens/MapScreen";
 
 export default function useRoute(isAuth) {
   if (!isAuth) {
     return (
-      <AuthStack.Navigator initialRouteName="Login">
-        <AuthStack.Screen
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
           name="Registration"
           component={RegistrationScreen}
           options={{ headerShown: false }}
         />
-        <AuthStack.Screen
+        <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-      </AuthStack.Navigator>
+      </Stack.Navigator>
     );
   }
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{ tabBarShowLabel: false }}
-    >
-      <Tab.Screen
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen
         name="Home"
         component={PostsScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, number, focused }) => {
-            return <PostIcon />;
-          },
         }}
       />
-      <Tab.Screen
-        name="Create"
-        component={CreatePostsScreen}
-        options={{
-          tabBarHideOnKeyboard: true,
-          title: "Create post",
-          headerTitleAlign: "center",
-          tabBarIcon: ({ color, number, focused }) => {
-            return <NewPostIcon />;
-          },
-          // tabBarStyle: { display: "none" },
-          // headerLeft: () => <BackBtn />,
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          title: "Profile",
-          headerTitleAlign: "center",
-          tabBarIcon: ({ color, number, focused }) => {
-            return <UserIcon />;
-          },
-        }}
-      />
-    </Tab.Navigator>
+      <Stack.Screen name="Comments" component={CommentsScreen} />
+      <Stack.Screen name="Map" component={MapScreen} />
+    </Stack.Navigator>
   );
 }

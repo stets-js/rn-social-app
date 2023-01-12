@@ -15,6 +15,9 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import { useDispatch } from "react-redux";
+import { signInUser } from "../redux/auth/authOperations";
+
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
@@ -25,13 +28,15 @@ const initialState = {
 export default function LoginScreen({navigation}) {
   const [state, setstate] = useState(initialState);
   const [isHidden, setisHidden] = useState(true);
+
+  const dispatch = useDispatch();
   
 
   const submitForm = () => {
     Keyboard.dismiss();
+    dispatch(signInUser(state))
     setstate(initialState);
-    console.log(state);
-    navigation.navigate("Home")
+   // navigation.navigate("Home")
     };
     
     const keyboardHide = () => {
