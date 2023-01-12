@@ -38,11 +38,11 @@ export default function RegistrationScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
-  const submitForm = () => {
+  const submitForm =  () => {
      dispatch(signUpUser(state));
     setstate(initialState);
     console.log(state);
-   // navigation.navigate("Home")
+   navigation.navigate("Home")
   };
 
   const [fontsLoaded] = useFonts({

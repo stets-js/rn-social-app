@@ -36,7 +36,7 @@ export default function LoginScreen({navigation}) {
     Keyboard.dismiss();
     dispatch(signInUser(state))
     setstate(initialState);
-   // navigation.navigate("Home")
+    navigation.navigate("Home")
     };
     
     const keyboardHide = () => {
