@@ -15,6 +15,11 @@ import * as Location from "expo-location";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import { v4 as uuidv4 } from 'uuid';
+
+import { getStorage, ref, uploadBytesResumable, uploadBytes, uploadString,getDownloadURL } from "firebase/storage";
+import appFirebase from "../firebase/firebaseConfig";
+
 const images = {
   defaultIcon: require("../assets/images/noPhotoIco.png"),
   editPhotoIcon: require("../assets/images/editPhotoIco.png"),
@@ -54,6 +59,18 @@ useEffect(() => {
     return null;
   }
 
+  const uploadPhotoToServer = async() => {
+
+    const storage = getStorage();
+    const photoId = uuidv4();
+    const storageRef = ref(storage, `/postIMG/${photoId}`);
+    const metadata = {
+  contentType: 'image/jpeg',
+};
+    uploadBytesResumable(storageRef, photo, metadata).then(()=> getDownloadURL(ref(storage, storageRef)).then((url) => { console.log("download url--->>>",url)}))
+  
+  };
+
   const takePhoto = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -62,9 +79,10 @@ useEffect(() => {
       }
     const data = await camera.takePictureAsync();
     const location = await Location.getCurrentPositionAsync({});
-    console.log(location)
+    console.log("photo--->>>", photo)
     setLocation(location);
     setPhoto(data.uri.toString());
+    uploadPhotoToServer();
   };
 
   const sendPhoto = () => {
@@ -75,6 +93,8 @@ useEffect(() => {
     setIsDisabled(true)
     setLocation(null)
   };
+
+
 
   const keyboardHide = () => {
     Keyboard.dismiss()
