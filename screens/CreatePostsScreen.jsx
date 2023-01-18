@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -17,8 +18,11 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { getStorage, ref, uploadBytesResumable, uploadBytes, uploadString,getDownloadURL } from "firebase/storage";
-import appFirebase from "../firebase/firebaseConfig";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, uploadString,getDownloadURL,getMetadata ,updateMetadata } from "firebase/storage";
+import firebaseapp from "../firebase/firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+
 
 const images = {
   defaultIcon: require("../assets/images/noPhotoIco.png"),
@@ -35,10 +39,11 @@ export default function CreateScreen({ navigation }) {
   const [location, setLocation] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true)
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const { userId, login } = useSelector((state) => state.auth);
  
   
 useEffect(() => {
-    console.log("photo--->>>>>", photo, "title--->>",title, "location-->>",locationTitle)
+    console.log("USE EFFECT photo--->>>>>", photo, "title--->>",title, "location-->>",locationTitle)
     if (photo && title && locationTitle) {
       setIsDisabled(false)
     }
@@ -47,7 +52,6 @@ useEffect(() => {
  const [fontsLoaded] = useFonts({
     "Robo-Regular": require("../assets/fonts/roboto/Roboto-Regular.ttf"),
     "Robo-Medium": require("../assets/fonts/roboto/Roboto-Medium.ttf"),
-    test: require("../assets/fonts/RubikBubbles-Regular.ttf"),
   });
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -59,33 +63,52 @@ useEffect(() => {
     return null;
   }
 
-  const uploadPhotoToServer = async() => {
-
-    const storage = getStorage();
-    const photoId = uuidv4();
-    const storageRef = ref(storage, `/postIMG/${photoId}`);
-    const metadata = {
-  contentType: 'image/jpeg',
-};
-    uploadBytesResumable(storageRef, photo, metadata).then(()=> getDownloadURL(ref(storage, storageRef)).then((url) => { console.log("download url--->>>",url)}))
   
+
+  const uploadPhotoToServer = async() => {
+    const storage = getStorage(firebaseapp);
+    console.log("server photo--->>>>",photo)
+
+    const response = await fetch(photo);
+    const file = await response.blob();
+    
+     const photoId = Date.now();
+     const storageRef = ref(storage, `/postImg/${photoId}`);
+     const metadata = {
+      contentType: 'image/jpeg',
+    };
+
+   const photoUrl = await uploadBytesResumable(storageRef, file, metadata).then(()=> getDownloadURL(ref(storage, storageRef)).then((url) => url))
+   return photoUrl
   };
 
-  const takePhoto = async () => {
+   const takePhoto = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission to access location was denied');
         return;
       }
     const data = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync({});
-    console.log("photo--->>>", photo)
-    setLocation(location);
-    setPhoto(data.uri.toString());
-    uploadPhotoToServer();
+    const currentLocation = await Location.getCurrentPositionAsync({});
+    setLocation(currentLocation);
+    setPhoto(data.uri);
   };
+  
+  const uploadPostToServer = async () => {
+    const db = getFirestore(firebaseapp);
+    const postPhotoUrl = await uploadPhotoToServer();
+await addDoc(collection(db, "posts"), {
+  postPhotoUrl, title, locationTitle, location, userId, login
+  })
 
-  const sendPhoto = () => {
+  // await setDoc(doc(firebaseapp, "posts", "new-city-id"), {
+  //   postPhotoUrl, title, locationTitle, location, userId, login
+  //   });
+}
+
+  const sendPhoto = async () => {
+     uploadPostToServer();
+
     navigation.navigate("DefaultScreen", { photo,title, locationTitle, location });
     setPhoto(null);
     setTitle(null);
@@ -94,6 +117,7 @@ useEffect(() => {
     setLocation(null)
   };
 
+ 
 
 
   const keyboardHide = () => {
@@ -142,6 +166,7 @@ useEffect(() => {
 
       {photo? <TouchableWithoutFeedback onPress={() => {
         setPhoto(null)
+        setLocation(null);
       }}>
         <Text>Edit photo</Text>
       </TouchableWithoutFeedback>: null}

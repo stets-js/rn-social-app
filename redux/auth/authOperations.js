@@ -6,7 +6,7 @@ import {
   updateProfile,
   signOut,
 } from "firebase/auth";
-import appFirebase from "../../firebase/firebaseConfig";
+import app from "../../firebase/firebaseConfig";
 import { authSlice } from "./authReducer";
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
@@ -14,7 +14,7 @@ export const signUpUser =
   ({ email, password, login }) =>
   async (dispatch, getState) => {
     try {
-      const auth = getAuth(appFirebase);
+      const auth = getAuth(app);
       await createUserWithEmailAndPassword(auth, email, password);
       onAuthStateChanged(auth, (user) => console.log("user--->>>", user));
 
@@ -41,7 +41,7 @@ export const signInUser =
   ({ email, password }) =>
   async (dispatch, getState) => {
     try {
-      const auth = getAuth(appFirebase);
+      const auth = getAuth(app);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       dispatch(updateUserProfile({ userId: user.uid }));
       console.log("user", user);
@@ -52,13 +52,13 @@ export const signInUser =
   };
 
 export const signOutUser = () => async (dispatch, getState) => {
-  const auth = getAuth(appFirebase);
+  const auth = getAuth(app);
   signOut(auth);
   dispatch(authSignOut());
 };
 
 export const authStateCahngeUser = () => async (dispatch, getState) => {
-  const auth = getAuth(appFirebase);
+  const auth = getAuth(app);
   await onAuthStateChanged(auth, (user) => {
     if (user) {
       const userUpdateProfile = {
