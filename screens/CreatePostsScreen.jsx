@@ -101,15 +101,12 @@ await addDoc(collection(db, "posts"), {
   postPhotoUrl, title, locationTitle, location, userId, login
   })
 
-  // await setDoc(doc(firebaseapp, "posts", "new-city-id"), {
-  //   postPhotoUrl, title, locationTitle, location, userId, login
-  //   });
 }
 
   const sendPhoto = async () => {
      uploadPostToServer();
 
-    navigation.navigate("DefaultScreen", { photo,title, locationTitle, location });
+    navigation.navigate("DefaultScreen");
     setPhoto(null);
     setTitle(null);
     setLocationTitle(null);

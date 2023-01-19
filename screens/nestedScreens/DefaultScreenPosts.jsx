@@ -4,6 +4,10 @@ import { View, StyleSheet, FlatList, Image, Text,TouchableOpacity,Dimensions } f
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import firebaseapp from "../../firebase/firebaseConfig";
+import { collection, getDocs  } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+
 const images = {
   map: require("../../assets/images/map.png"),
   comment: require("../../assets/images/comment.png"),
@@ -12,12 +16,17 @@ const images = {
 export default function DefaultScreenPosts({ route, navigation }) {
   const [posts, setPosts] = useState([]);
 
+const getAllPosts = async () => {
+  const db = getFirestore(firebaseapp);
+  const querySnapshot = await getDocs(collection(db, "posts"));
+ setPosts(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+}
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
-  console.log("posts", posts);
+  getAllPosts()
+   console.log("posts===>>>>>",posts)
+  }, [posts]);
+  
 
   const [fontsLoaded] = useFonts({
     "Robo-Regular": require("../../assets/fonts/roboto/Roboto-Regular.ttf"),
@@ -46,10 +55,10 @@ export default function DefaultScreenPosts({ route, navigation }) {
             style={styles.postBox}
           >
             <Image
-              source={{uri: item.photo }}
+              source={{uri: item.postPhotoUrl }}
               style={styles.postImg}
             />
-            <Text style={styles.postTitle}>{ item.title}</Text>
+            <Text style={styles.postTitle} onLayout={onLayoutRootView}>{ item.title}</Text>
                 <View style={styles.detailsBox}>
                     <TouchableOpacity  style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Comments")}>
                       <Image
