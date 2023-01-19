@@ -24,8 +24,7 @@ const getAllPosts = async () => {
 
   useEffect(() => {
   getAllPosts()
-   console.log("posts===>>>>>",posts)
-  }, [posts]);
+  }, []);
   
 
   const [fontsLoaded] = useFonts({
