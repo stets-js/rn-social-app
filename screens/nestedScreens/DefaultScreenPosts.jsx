@@ -59,7 +59,7 @@ const getAllPosts = async () => {
             />
             <Text style={styles.postTitle} onLayout={onLayoutRootView}>{ item.title}</Text>
                 <View style={styles.detailsBox}>
-                    <TouchableOpacity  style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Comments")}>
+                    <TouchableOpacity  style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Comments", { postId: item.id }) }>
                       <Image
                       source={images.comment}
                       style={{ width: 25, height: 25 }}
