@@ -41,7 +41,6 @@ export default function RegistrationScreen({ navigation }) {
   const submitForm =  () => {
      dispatch(signUpUser(state));
     setstate(initialState);
-    console.log(state);
    navigation.navigate("Home")
   };
 

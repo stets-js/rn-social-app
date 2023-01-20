@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { View, Text, StyleSheet,TextInput,TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet,TextInput,TouchableOpacity, Image,SafeAreaView, FlatList } from "react-native";
 import firebaseapp from "../../firebase/firebaseConfig";
 import { collection, getDocs, onSnapshot,addDoc  } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
@@ -12,18 +12,28 @@ const images = {
 };
 
 export default function CommentsScreen({route}) {
-  const { postId } = route.params;
+  const { postId, postPhoto } = route.params;
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState(null);
-
+  const [allComments, setAllComments] = useState([]);
   const { login } = useSelector((state) => state.auth);
-  
+
+  useEffect(() => {
+    getAllPosts();
+  }, []);
+
   const createPost = async() => {
     const db = getFirestore(firebaseapp);
    await addDoc(collection(db, "posts", postId, "comments"),
-      {comment,id:postId, time: Date.now(), login: login}
+      {comment, time: Date.now(), login: login}
     )
     setComment("")
+  };
+
+  const getAllPosts = async () => {
+    const db = getFirestore(firebaseapp);
+    onSnapshot(collection(db, "posts", postId, "comments"), (data) =>
+        setAllComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      );
   };
 
 
@@ -44,6 +54,27 @@ export default function CommentsScreen({route}) {
 
   return(
     <View style={styles.container}>
+      <View style={styles.postImgBox}>
+      <Image
+              source={{uri: postPhoto }}
+              style={styles.postImg}
+            />
+      </View>
+       <SafeAreaView style={styles.container}>
+        <FlatList
+          data={allComments}
+          renderItem={({ item }) => (
+            <View style={styles.commentContainer}>
+              <Text style={styles.logoImg}>{item.login}</Text>
+                  <View style={styles.commentTextBox}>
+                  <Text style={styles.comment}>{item.comment}</Text>
+                  <Text style={styles.time}>{item.time}</Text>
+                  </View>
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </SafeAreaView>
         <View style={styles.commentBox} onLayout={onLayoutRootView}>
                 <TextInput
                   style={styles.commentInput}
@@ -72,6 +103,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
 
   },
+  postImgBox:{
+    width: "100%",
+    height: 240,
+    marginVertical:32,
+  },
+  postImg: {
+    width: "100%",
+    height: 240,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
   commentBox:{
     marginBottom: 16,
   },
@@ -90,5 +132,28 @@ fontSize: 16,
     position:"absolute",
     top: 8,
     right: 8,
+},
+commentContainer:{
+  flex:1,
+  flexDirection:"row",
+  alignItems:"flex-start",
+  marginBottom: 24,
+  
+},
+logoImg:{
+  marginRight: 16,
+},
+commentTextBox:{
+  
+
+  backgroundColor: "rgba(0, 0, 0, 0.03)",
+  borderRadius: 6,
+  padding: 16,
+  fontFamily: "Robo-Regular",
+fontSize: 13,
+},
+comment:{
+flexWrap: "wrap",
+
 },
 });
