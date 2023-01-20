@@ -4,7 +4,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { View, Text, StyleSheet,TextInput,TouchableOpacity, Image } from "react-native";
 import firebaseapp from "../../firebase/firebaseConfig";
-import { collection, getDocs, onSnapshot  } from "firebase/firestore";
+import { collection, getDocs, onSnapshot,addDoc  } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 
 const images = {
@@ -14,13 +14,16 @@ const images = {
 export default function CommentsScreen({route}) {
   const { postId } = route.params;
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(null);
+
   const { login } = useSelector((state) => state.auth);
   
-  const createPost = () => {
+  const createPost = async() => {
     const db = getFirestore(firebaseapp);
-    onSnapshot(db, "posts", postId, "comments"), data=>{
-      setComment(data.docs.map(doc=>({...doc.data(),id:doc.id, time: Date.now(), login: login})))
-    }
+   await addDoc(collection(db, "posts", postId, "comments"),
+      {comment,id:postId, time: Date.now(), login: login}
+    )
+    setComment("")
   };
 
 
@@ -80,7 +83,7 @@ borderColor: "#E8E8E8",
 borderRadius: 100,
 borderWidth: 1,
 paddingLeft: 16,
-fontFamily: "Roboto-Medium",
+fontFamily: "Robo-Medium",
 fontSize: 16,
   },
   sendBtn: {
