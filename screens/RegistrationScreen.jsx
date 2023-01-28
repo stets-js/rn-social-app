@@ -39,6 +39,9 @@ export default function RegistrationScreen({ navigation }) {
     Keyboard.dismiss();
   };
 
+  const avatarHandler = (value) => {setstate((prevState) => ({ ...prevState, avatar: value }))}
+  console.log( 'state--->>>', state)
+
   const submitForm =  () => {
      dispatch(signUpUser(state));
     setstate(initialState);
@@ -65,7 +68,7 @@ export default function RegistrationScreen({ navigation }) {
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <View style={styles.regBox}>
-            <ImagePickerAvatar />
+            <ImagePickerAvatar avatarHandler={avatarHandler}/>
             <View onLayout={onLayoutRootView}>
               <Text style={styles.formTitle}>REGISTRATION</Text>
             </View>

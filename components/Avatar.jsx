@@ -14,8 +14,9 @@ const images = {
     resetButton: require("../assets/images/reset.png")
 }
 
-export default function ImagePickerAvatar() {
+export default function ImagePickerAvatar(props) {
    const [image, setImage] = useState(null);
+   const {avatarHandler} = props;
 
     const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -25,10 +26,13 @@ export default function ImagePickerAvatar() {
       quality: 1,
     });
     if (!result.canceled) {
+      console.log( 'result.assets[0].uri--->>>', result.assets[0].uri)
       setImage(result.assets[0].uri);
+      avatarHandler(result.assets[0].uri);
     }
+    //avatarHandler(images.avatar)
     };
-    
+  
     const deleteAvatar = () => {
         setImage(null)
     }

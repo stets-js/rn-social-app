@@ -6,28 +6,42 @@ import {
   updateProfile,
   signOut,
 } from "firebase/auth";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, uploadString,getDownloadURL,getMetadata ,updateMetadata } from "firebase/storage";
+
 import app from "../../firebase/firebaseConfig";
 import { authSlice } from "./authReducer";
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
 export const signUpUser =
-  ({ email, password, login }) =>
+  ({ email, password, login, avatar }) =>
   async (dispatch, getState) => {
     try {
+      const response = await fetch(avatar);
+    const file = await response.blob();
+
       const auth = getAuth(app);
+      const storage = getStorage(app);
+      const storageRef = ref(storage, `/avatar/${login}`);
+     const metadata = {
+      contentType: 'image/jpeg',
+    };
+      const avatarUrl = await uploadBytesResumable(storageRef, file, metadata).then(()=> getDownloadURL(ref(storage, storageRef)).then((url) => url))
+
       await createUserWithEmailAndPassword(auth, email, password);
-      onAuthStateChanged(auth, (user) => console.log("user--->>>", user));
+       onAuthStateChanged(auth, (user) => console.log("user--->>>", user));
 
       await updateProfile(auth.currentUser, {
         displayName: login,
+        photoURL: avatarUrl,
       });
 
-      const { displayName, uid } = await auth.currentUser;
-      console.log("user", displayName, uid);
+      const { displayName, uid, photoURL } = await auth.currentUser;
+      //console.log("registeres user---->>>>", displayName, uid);
 
       const userUpdateProfile = {
         login: displayName,
         userId: uid,
+        avatar: photoURL,
       };
 
       dispatch(updateUserProfile(userUpdateProfile));
@@ -44,7 +58,7 @@ export const signInUser =
       const auth = getAuth(app);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       dispatch(updateUserProfile({ userId: user.uid }));
-      console.log("user", user);
+      console.log("loged user-->>>>", user);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
