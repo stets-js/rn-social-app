@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
- 
+ Image,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { signUpUser } from "../redux/auth/authOperations";
@@ -22,11 +22,14 @@ import ImagePickerAvatar from "../components/Avatar";
 
 SplashScreen.preventAutoHideAsync();
 
+import sysAvatar from "../assets/images/sysAvatar.png";
+const sysAvatarUri = Image.resolveAssetSource(sysAvatar).uri
+
 const initialState = {
   login: "",
   email: "",
   password: "",
-  avatar:"",
+  avatar: sysAvatarUri,
 };
 
 export default function RegistrationScreen({ navigation }) {

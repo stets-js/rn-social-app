@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 
+import sysAvatar from "../assets/images/sysAvatar.png";
+const sysAvatarUri = Image.resolveAssetSource(sysAvatar).uri
+
 const images = {
     avatar: require("../assets/images/sysAvatar.png"),
     addButton: require("../assets/images/add.png"),
@@ -30,11 +33,11 @@ export default function ImagePickerAvatar(props) {
       setImage(result.assets[0].uri);
       avatarHandler(result.assets[0].uri);
     }
-    //avatarHandler(images.avatar)
     };
   
     const deleteAvatar = () => {
         setImage(null)
+        avatarHandler(sysAvatarUri);
     }
     
 
