@@ -21,7 +21,7 @@ export const signUpUser =
 
       const auth = getAuth(app);
       const storage = getStorage(app);
-      const storageRef = ref(storage, `/avatar/${login}`);
+      const storageRef = ref(storage, `/avatar/${email}`);
      const metadata = {
       contentType: 'image/jpeg',
     };
