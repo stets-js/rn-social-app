@@ -9,8 +9,13 @@ import { getFirestore } from "firebase/firestore";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+const images = {
+  map: require("../assets/images/map.png"),
+  comment: require("../assets/images/comment.png"),
+};
 
-export default function ProfileScreen() {
+
+export default function ProfileScreen({navigation}) {
     const dispatch = useDispatch();
     const [userPosts, setUserPosts] = useState([]);
     const { userId, login, avatar } = useSelector((state) => state.auth);
@@ -62,7 +67,7 @@ export default function ProfileScreen() {
                       source={require("../assets/images/log-out.png")}
                     />
                     </TouchableOpacity>
-            <Text style={styles.textlogin} onLayout={onLayoutRootView}>{login}</Text>
+              <Text style={styles.textlogin} onLayout={onLayoutRootView}>{login}</Text>
 
            
         
@@ -71,15 +76,30 @@ export default function ProfileScreen() {
             keyExtractor={(item, indx) => indx.toString()}
             renderItem={({ item }) => (
               <View
-                style={{
-                  marginBottom: 10,
-                 
-                }}
+                style={styles.postBox}
               >
                 <Image
                   source={{ uri: item.postPhotoUrl }}
                   style={styles.postImg}
                 />
+                <Text style={styles.postTitle}>{ item.title}</Text>
+                <View style={styles.detailsBox}>
+                    <TouchableOpacity style={styles.commentBox} onPress={() => navigation.navigate("Comments", { postId: item.id, postPhoto: item.postPhotoUrl }) }>
+                      <Image
+                      source={images.comment}
+                      style={{ width: 25, height: 25 }}
+                    />
+                    </TouchableOpacity>
+                        
+                        <TouchableOpacity style={styles.locationBox} onPress={() => navigation.navigate("Map", {item: item})}>
+                          <Image
+                          source={images.map}
+                          style={{ width: 25, height: 25 }}
+                        />
+                        <Text style={styles.locationTitle}>{ item.locationTitle}</Text>
+                        </TouchableOpacity>
+                      
+                </View>
               </View>
             )}
           />
@@ -131,9 +151,37 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     textAlign: "center",
     },
+    postBox:{
+      marginBottom: 30,
+    },
     postImg:{
       height: 240,
       borderRadius: 8,
+      marginBottom:8,
     },
-
+    postTitle:{
+      fontFamily: "Robo-Medium",
+      fontSize: 16,
+      marginBottom:8,
+    },
+    detailsBox:{
+      flex: 1,
+      flexDirection:"row",
+      
+    },
+    commentBox:{
+      flex:1,
+      flexDirection: "row",
+    },
+    locationBox:{
+      flex:2,
+      justifyContent: "flex-end",
+     flexDirection: "row",
+      //borderWidth: 1, borderColor: 'blue'
+  },
+  locationTitle:{
+    fontFamily: "Robo-Medium",
+    fontSize: 16,
+    textDecorationLine: "underline",
+    },
   });
