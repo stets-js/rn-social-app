@@ -48,9 +48,7 @@ export default function PostsScreen(){
         name="Profile"
         component={ProfileScreen}
         options={{
-          headerRight: () => <LogoutBtn />,
-          title: "Profile",
-          headerTitleAlign: "center",
+          headerShown: false,
           tabBarIcon: ({ color, number, focused }) => {
             return <UserIcon />;
           },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useCallback } from "react";
-import { View, Text, StyleSheet, Button, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, Button, FlatList, Image, ImageBackground, Dimensions, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUser } from "../redux/auth/authOperations";
 import firebaseapp from "../firebase/firebaseConfig";
@@ -13,8 +13,9 @@ import * as SplashScreen from "expo-splash-screen";
 export default function ProfileScreen() {
     const dispatch = useDispatch();
     const [userPosts, setUserPosts] = useState([]);
-    const { userId, login } = useSelector((state) => state.auth);
+    const { userId, login, avatar } = useSelector((state) => state.auth);
   
+
     useEffect(() => {
       getUserPosts();
     }, []);
@@ -49,12 +50,21 @@ export default function ProfileScreen() {
 
 
     return (
+      <ImageBackground style={styles.bg} source={require("../assets/bg.jpg")}>
       <View style={styles.container}>
-        <View>
-            <View>
-        <Text style={styles.textlogin} onLayout={onLayoutRootView}>Login: {login}</Text>
+        <View style={styles.profileBox}>
+            <Image
+                source={{ uri: avatar }}
+                style={styles.userAvatar}
+              />
+              <TouchableOpacity style={styles.logoutBtn} onPress={() => signOut()}>
+                      <Image
+                      source={require("../assets/images/log-out.png")}
+                    />
+                    </TouchableOpacity>
+            <Text style={styles.textlogin} onLayout={onLayoutRootView}>{login}</Text>
 
-            </View>
+           
         
           <FlatList
             data={userPosts}
@@ -68,13 +78,14 @@ export default function ProfileScreen() {
               >
                 <Image
                   source={{ uri: item.postPhotoUrl }}
-                  style={{ width: 350, height: 200 }}
+                  style={styles.postImg}
                 />
               </View>
             )}
           />
         </View>
       </View>
+    </ImageBackground>
     );
   };
   
@@ -82,15 +93,47 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 16,
-        backgroundColor: "#fff",
       justifyContent: "flex-start",
+    },
+    bg: {
+      flex: 1,
+      resizeMode: "cover",
+    },
+    profileBox:{
+      flex: 1,
+      marginTop: 150,
+      paddingHorizontal: 16,
+      paddingTop:92,
+       backgroundColor: "#FFFFFF",
+       borderTopLeftRadius: 25,
+       borderTopRightRadius: 25,
+    },
+    userAvatar:{
+      width:120,
+      height:120,
+      position: "absolute",
+      top: -60,
+      left: (Dimensions.get('window').width / 2)-60,
+      width: 120,
+      height: 120,
+      backgroundColor: "#F6F6F6",
+    borderRadius:16,
+    },
+    logoutBtn:{
+     width: 24, 
+     height: 24,
+     position: "absolute",
+     top: 22,
+     right: 16,
     },
     textlogin:{
     fontSize: 30,
-    marginBottom: 50,
+    marginBottom: 32,
     textAlign: "center",
-
-    }
+    },
+    postImg:{
+      height: 240,
+      borderRadius: 8,
+    },
 
   });
