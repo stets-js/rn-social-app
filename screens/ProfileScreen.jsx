@@ -20,7 +20,6 @@ export default function ProfileScreen({navigation}) {
     const [userPosts, setUserPosts] = useState([]);
     const { userId, login, avatar } = useSelector((state) => state.auth);
   
-
     useEffect(() => {
       getUserPosts();
     }, []);
@@ -30,7 +29,7 @@ export default function ProfileScreen({navigation}) {
         const postsRef = collection(db, "posts");
         const q = query(postsRef, where("userId", "==", userId));
         onSnapshot(q, (data) =>
-        setUserPosts(data.docs.map((doc) => ({ ...doc.data() })))
+        setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       );
     };
 
@@ -89,8 +88,8 @@ export default function ProfileScreen({navigation}) {
                       source={images.comment}
                       style={{ width: 25, height: 25 }}
                     />
+                    <Text style={styles.commentCounter}>10</Text>
                     </TouchableOpacity>
-                        
                         <TouchableOpacity style={styles.locationBox} onPress={() => navigation.navigate("Map", {item: item})}>
                           <Image
                           source={images.map}
@@ -172,6 +171,10 @@ const styles = StyleSheet.create({
     commentBox:{
       flex:1,
       flexDirection: "row",
+    },
+    commentCounter:{
+      fontFamily: "Robo-Medium",
+      fontSize: 16, 
     },
     locationBox:{
       flex:2,
