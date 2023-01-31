@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useCallback } from "react";
-import { View, Text, StyleSheet, Button, FlatList, Image, ImageBackground, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image, ImageBackground, Dimensions, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUser } from "../redux/auth/authOperations";
 import firebaseapp from "../firebase/firebaseConfig";
@@ -20,16 +20,24 @@ export default function ProfileScreen({navigation}) {
     const [userPosts, setUserPosts] = useState([]);
     const { userId, login, avatar } = useSelector((state) => state.auth);
   
+    console.log( 'userPosts--->>>', userPosts)
+
     useEffect(() => {
       getUserPosts();
     }, []);
+
+     const getComments = async (postId) =>{
+       const db = getFirestore(firebaseapp);
+   onSnapshot(collection(db, "posts", postId, "comments"), (data) => data.docs.length)
+   }
   
     const getUserPosts = async () => {
         const db = getFirestore(firebaseapp);
         const postsRef = collection(db, "posts");
         const q = query(postsRef, where("userId", "==", userId));
+        
         onSnapshot(q, (data) =>
-        setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id,commentTotal: getComments(doc.id)})))
       );
     };
 
@@ -67,9 +75,6 @@ export default function ProfileScreen({navigation}) {
                     />
                     </TouchableOpacity>
               <Text style={styles.textlogin} onLayout={onLayoutRootView}>{login}</Text>
-
-           
-        
           <FlatList
             data={userPosts}
             keyExtractor={(item, indx) => indx.toString()}
@@ -88,7 +93,7 @@ export default function ProfileScreen({navigation}) {
                       source={images.comment}
                       style={{ width: 25, height: 25 }}
                     />
-                    <Text style={styles.commentCounter}>10</Text>
+                    <Text style={styles.commentCounter}>111</Text>
                     </TouchableOpacity>
                         <TouchableOpacity style={styles.locationBox} onPress={() => navigation.navigate("Map", {item: item})}>
                           <Image
