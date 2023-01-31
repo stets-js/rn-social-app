@@ -39,7 +39,7 @@ export default function CreateScreen({ navigation }) {
   const [location, setLocation] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true)
   const [permission, requestPermission] = Camera.useCameraPermissions();
-  const { userId, login } = useSelector((state) => state.auth);
+  const { userId, login, avatar } = useSelector((state) => state.auth);
  
   
 useEffect(() => {
@@ -98,7 +98,7 @@ useEffect(() => {
     const db = getFirestore(firebaseapp);
     const postPhotoUrl = await uploadPhotoToServer();
 await addDoc(collection(db, "posts"), {
-  postPhotoUrl, title, locationTitle, location, userId, login
+  postPhotoUrl, title, locationTitle, location, userId, login, avatar
   })
 
 }

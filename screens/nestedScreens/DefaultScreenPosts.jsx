@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, FlatList, Image, Text,TouchableOpacity,Dimensions } from "react-native";
-
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -53,11 +52,20 @@ const getAllPosts = async () => {
           <View
             style={styles.postBox}
           >
+            <View>
             <Image
               source={{uri: item.postPhotoUrl }}
               style={styles.postImg}
             />
-            <Text style={styles.postTitle} onLayout={onLayoutRootView}>{ item.title}</Text>
+            <View style={styles.authorBox}>
+            <Image
+              source={{uri: item.avatar }}
+              style={styles.userAvatar}
+              />
+              <Text style={styles.userLogin} onLayout={onLayoutRootView}>{item.login}</Text>
+            </View>
+            </View>
+            <Text style={styles.postTitle} >{ item.title}</Text>
                 <View style={styles.detailsBox}>
                     <TouchableOpacity  style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Comments", { postId: item.id, postPhoto: item.postPhotoUrl }) }>
                       <Image
@@ -65,6 +73,7 @@ const getAllPosts = async () => {
                       style={{ width: 25, height: 25 }}
                     />
                     </TouchableOpacity>
+                    
                     <TouchableOpacity style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Map", {item: item})}>
                       <Image
                       source={images.map}
@@ -87,13 +96,36 @@ const styles = StyleSheet.create({
   },
   postBox: {
   marginBottom: 10,
-              
+  },
+  authorBox:{
+    position: "absolute",
+  },
+  userLogin:{
+    position: "absolute",
+    top: 10,
+    left: 25,
+    zIndex: 1,
+    backgroundColor: "#FFFFFF",
+paddingLeft: 40,
+paddingRight: 20,
+borderRadius: 8,
+fontFamily: "Robo-Medium",
+    fontSize: 16,
   },
   postImg: {
     width: Dimensions.get("window").width - 32,
     height: 240,
     borderRadius: 8,
     marginBottom: 8,
+  },
+  userAvatar:{
+    width:40,
+    height:40,
+    top: 10,
+    left: 10,
+    zIndex: 2,
+    position: "absolute",
+  borderRadius:16,
   },
   postTitle: {
     fontFamily: "Robo-Medium",
