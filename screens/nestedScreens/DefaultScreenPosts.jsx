@@ -67,18 +67,20 @@ const getAllPosts = async () => {
             </View>
             <Text style={styles.postTitle} >{ item.title}</Text>
                 <View style={styles.detailsBox}>
-                    <TouchableOpacity  style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Comments", { postId: item.id, postPhoto: item.postPhotoUrl }) }>
+                    <TouchableOpacity  style={styles.commentBox} onPress={() => navigation.navigate("Comments", { postId: item.id, postPhoto: item.postPhotoUrl }) }>
                       <Image
                       source={images.comment}
                       style={{ width: 25, height: 25 }}
                     />
+                    <Text style={styles.commentCounter}>10</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={{ width: 25, height: 25 }} onPress={() => navigation.navigate("Map", {item: item})}>
+                    <TouchableOpacity style={styles.locationBox} onPress={() => navigation.navigate("Map", {item: item})}>
                       <Image
                       source={images.map}
                       style={{ width: 25, height: 25 }}
                     />
+                    <Text style={styles.locationTitle}>{ item.locationTitle}</Text>
                     </TouchableOpacity>
                 </View>
           </View>
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:16,
   },
   postBox: {
-  marginBottom: 10,
+  marginBottom: 30,
   },
   authorBox:{
     position: "absolute",
@@ -130,11 +132,30 @@ fontFamily: "Robo-Medium",
   postTitle: {
     fontFamily: "Robo-Medium",
     fontSize: 16,
-    marginBottom:11,
+    marginBottom:8,
   },
   detailsBox: {
     flex: 1,
     flexDirection: "row",
     justifyContent:"space-between",
   },
+  commentBox:{
+    flex:1,
+    flexDirection: "row",
+  },
+  commentCounter:{
+    fontFamily: "Robo-Medium",
+    fontSize: 16, 
+  },
+  locationBox:{
+    flex:2,
+    justifyContent: "flex-end",
+   flexDirection: "row",
+    //borderWidth: 1, borderColor: 'blue'
+},
+  locationTitle:{
+    fontFamily: "Robo-Medium",
+    fontSize: 16,
+    textDecorationLine: "underline",
+    },
 });
