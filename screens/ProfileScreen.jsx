@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
     },
     commentCounter:{
       fontFamily: "Robo-Medium",
-      fontSize: 16, 
+      fontSize: 16,
+      marginLeft:5, 
     },
     locationBox:{
       flex:2,
@@ -186,5 +187,6 @@ const styles = StyleSheet.create({
     fontFamily: "Robo-Medium",
     fontSize: 16,
     textDecorationLine: "underline",
+    marginLeft:5,
     },
   });

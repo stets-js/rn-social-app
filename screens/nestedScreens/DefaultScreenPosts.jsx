@@ -146,6 +146,7 @@ fontFamily: "Robo-Medium",
   commentCounter:{
     fontFamily: "Robo-Medium",
     fontSize: 16, 
+    marginLeft:5, 
   },
   locationBox:{
     flex:2,
@@ -157,5 +158,6 @@ fontFamily: "Robo-Medium",
     fontFamily: "Robo-Medium",
     fontSize: 16,
     textDecorationLine: "underline",
+    marginLeft:5, 
     },
 });
