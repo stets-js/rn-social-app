@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { View, Text, StyleSheet,TextInput,TouchableOpacity, Image,SafeAreaView, FlatList } from "react-native";
+import { View, Text, StyleSheet,TextInput,TouchableOpacity, Image,SafeAreaView, FlatList ,Dimensions} from "react-native";
 import firebaseapp from "../../firebase/firebaseConfig";
 import { collection, getDocs, onSnapshot,addDoc  } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
@@ -15,7 +15,7 @@ export default function CommentsScreen({route}) {
   const { postId, postPhoto } = route.params;
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
-  const { login } = useSelector((state) => state.auth);
+  const { login, avatar } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPosts();
@@ -24,7 +24,7 @@ export default function CommentsScreen({route}) {
   const createPost = async() => {
     const db = getFirestore(firebaseapp);
    await addDoc(collection(db, "posts", postId, "comments"),
-      {comment, time: Date.now(), login: login}
+      {comment, time: Date.now(), login: login, avatar: avatar}
     )
     setComment("")
   };
@@ -65,10 +65,16 @@ export default function CommentsScreen({route}) {
           data={allComments}
           renderItem={({ item }) => (
             <View style={styles.commentContainer}>
-              <Text style={styles.logoImg}>{item.login}</Text>
+              <Image
+              source={{uri: item.avatar }}
+              style={styles.authorAvatar}
+            />
                   <View style={styles.commentTextBox}>
                   <Text style={styles.comment}>{item.comment}</Text>
-                  <Text style={styles.time}>{item.time}</Text>
+                  <View style={styles.authorBox}>
+                  <Text style={styles.time}>Author: {item.login}</Text>
+                  <Text style={styles.time}>{new Date(item.time).toUTCString().split(" ").slice(1,-1).join(" ")}</Text>
+                  </View>
                   </View>
             </View>
           )}
@@ -101,7 +107,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingHorizontal: 16,
     backgroundColor: "#fff",
-
   },
   postImgBox:{
     width: "100%",
@@ -112,7 +117,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
     borderRadius: 8,
-    marginBottom: 8,
   },
   commentBox:{
     marginBottom: 16,
@@ -140,20 +144,34 @@ commentContainer:{
   marginBottom: 24,
   
 },
-logoImg:{
+authorAvatar:{
+  width:50,
+  height:50,
+  borderRadius: 8,
   marginRight: 16,
 },
 commentTextBox:{
-  
-
+width: (Dimensions.get('window').width)-133,
   backgroundColor: "rgba(0, 0, 0, 0.03)",
   borderRadius: 6,
   padding: 16,
-  fontFamily: "Robo-Regular",
-fontSize: 13,
+  
+
 },
 comment:{
 flexWrap: "wrap",
-
+fontFamily: "Robo-Regular",
+fontSize: 16,
+marginBottom: 10,
+},
+authorBox:{
+  width: "100%",
+  flex:1,
+  flexDirection: "row",
+},
+time:{
+  fontFamily: "Robo-Regular",
+fontSize: 10,
+marginLeft: "auto",
 },
 });
