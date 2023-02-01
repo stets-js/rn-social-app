@@ -7,6 +7,8 @@ import firebaseapp from "../../firebase/firebaseConfig";
 import { collection, getDocs  } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 
+import {getComments} from "../ProfileScreen"
+
 const images = {
   map: require("../../assets/images/map.png"),
   comment: require("../../assets/images/comment.png"),
@@ -14,11 +16,12 @@ const images = {
 
 export default function DefaultScreenPosts({ route, navigation }) {
   const [posts, setPosts] = useState([]);
+  console.log( 'posts--->>>', posts)
 
 const getAllPosts = async () => {
   const db = getFirestore(firebaseapp);
   const querySnapshot = await getDocs(collection(db, "posts"));
- setPosts(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+ Promise.all(querySnapshot.docs.map(async(doc) => ({ ...doc.data(), id: doc.id, commentTotal: await getComments(doc.id)}))).then((comments) => setPosts(comments))
 }
 
   useEffect(() => {
@@ -72,7 +75,7 @@ const getAllPosts = async () => {
                       source={images.comment}
                       style={{ width: 25, height: 25 }}
                     />
-                    <Text style={styles.commentCounter}>10</Text>
+                    <Text style={styles.commentCounter}>{item.commentTotal}</Text>
                     </TouchableOpacity>
                     
                     <TouchableOpacity style={styles.locationBox} onPress={() => navigation.navigate("Map", {item: item})}>

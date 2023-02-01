@@ -14,6 +14,13 @@ const images = {
   comment: require("../assets/images/comment.png"),
 };
 
+export async function getComments(postId){
+  const db = getFirestore(firebaseapp);
+// onSnapshot(collection(db, "posts", postId, "comments"), (data) => data.docs.length)
+const snapshot = await getCountFromServer(query(collection(db, "posts", postId, "comments")));
+console.log( 'snapshot.data().count--->>>', snapshot.data().count)
+return snapshot.data().count
+}
 
 export default function ProfileScreen({navigation}) {
     const dispatch = useDispatch();
@@ -25,14 +32,6 @@ export default function ProfileScreen({navigation}) {
     useEffect(() => {
       getUserPosts();
     }, []);
-
-     const getComments = async (postId) =>{
-       const db = getFirestore(firebaseapp);
-  // onSnapshot(collection(db, "posts", postId, "comments"), (data) => data.docs.length)
-const snapshot = await getCountFromServer(query(collection(db, "posts", postId, "comments")));
-console.log( 'snapshot.data().count--->>>', snapshot.data().count)
-return snapshot.data().count
-   }
   
     const getUserPosts = () => {
         const db = getFirestore(firebaseapp);
