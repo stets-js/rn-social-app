@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOutUser } from "../redux/auth/authOperations";
 import firebaseapp from "../firebase/firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, getCountFromServer } from "firebase/firestore";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -28,16 +28,18 @@ export default function ProfileScreen({navigation}) {
 
      const getComments = async (postId) =>{
        const db = getFirestore(firebaseapp);
-   onSnapshot(collection(db, "posts", postId, "comments"), (data) => data.docs.length)
+  // onSnapshot(collection(db, "posts", postId, "comments"), (data) => data.docs.length)
+const snapshot = await getCountFromServer(query(collection(db, "posts", postId, "comments")));
+console.log( 'snapshot.data().count--->>>', snapshot.data().count)
+return snapshot.data().count
    }
   
-    const getUserPosts = async () => {
+    const getUserPosts = () => {
         const db = getFirestore(firebaseapp);
         const postsRef = collection(db, "posts");
         const q = query(postsRef, where("userId", "==", userId));
-        
         onSnapshot(q, (data) =>
-        setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id,commentTotal: getComments(doc.id)})))
+        Promise.all(data.docs.map(async(doc) => ({ ...doc.data(), id: doc.id, commentTotal: await getComments(doc.id)}))).then((comments) => setUserPosts(comments))
       );
     };
 
@@ -93,7 +95,7 @@ export default function ProfileScreen({navigation}) {
                       source={images.comment}
                       style={{ width: 25, height: 25 }}
                     />
-                    <Text style={styles.commentCounter}>111</Text>
+                    <Text style={styles.commentCounter}>{item.commentTotal}</Text>
                     </TouchableOpacity>
                         <TouchableOpacity style={styles.locationBox} onPress={() => navigation.navigate("Map", {item: item})}>
                           <Image
