@@ -17,6 +17,8 @@ export default function CommentsScreen({route}) {
   const [allComments, setAllComments] = useState([]);
   const { login, avatar } = useSelector((state) => state.auth);
 
+  console.log( 'allComments--->>>', allComments)
+
   useEffect(() => {
     getAllPosts();
   }, []);
@@ -62,7 +64,7 @@ export default function CommentsScreen({route}) {
       </View>
        <SafeAreaView style={styles.container}>
         <FlatList
-          data={allComments}
+          data={allComments.sort((a, b) => a.time.toString().localeCompare(b.time.toString()))}
           renderItem={({ item }) => (
             <View style={styles.commentContainer}>
               <Image
