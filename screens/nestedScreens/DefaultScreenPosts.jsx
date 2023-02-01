@@ -50,6 +50,8 @@ const getAllPosts = async () => {
     <View style={styles.container}>
       <FlatList
         data={posts}
+        showsVerticalScrollIndicator={false}
+  showsHorizontalScrollIndicator={false}
         keyExtractor={(item, indx) => indx.toString()}
         renderItem={({ item }) => (
           <View

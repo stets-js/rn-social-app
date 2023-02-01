@@ -65,6 +65,8 @@ export default function CommentsScreen({route}) {
        <SafeAreaView style={styles.container}>
         <FlatList
           data={allComments.sort((a, b) => a.time.toString().localeCompare(b.time.toString()))}
+          showsVerticalScrollIndicator={false}
+  showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
             <View style={styles.commentContainer}>
               <Image

@@ -78,6 +78,8 @@ export default function ProfileScreen({navigation}) {
               <Text style={styles.textlogin} onLayout={onLayoutRootView}>{login}</Text>
           <FlatList
             data={userPosts}
+            showsVerticalScrollIndicator={false}
+  showsHorizontalScrollIndicator={false}
             keyExtractor={(item, indx) => indx.toString()}
             renderItem={({ item }) => (
               <View
